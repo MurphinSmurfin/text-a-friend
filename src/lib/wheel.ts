@@ -21,6 +21,16 @@ export function landing(i: number, n: number, from: number, turns = 4): number {
 /** Hue for the friend at position i. Golden-angle steps keep neighbours distinct and the list matching the wheel. */
 export const hue = (i: number) => Math.round((i * 137.508) % 360);
 
+/** Where label text ends, just inside the rim. */
+export const RIM = 0.92;
+
+/** Largest font size, capped at 0.12, whose height fits the slice chord 2r·sin(π/n) at r = RIM minus the text length (0.6em per glyph). */
+export function fontSize(chars: number, n: number): number {
+  if (n < 2) return 0.12;
+  const k = 1.6 * Math.sin(Math.PI / n); // 2·sin with 20% breathing room
+  return Math.min(0.12, +((k * RIM) / (1 + k * chars * 0.6)).toFixed(3));
+}
+
 /** What fits on a slice. shortcut: initials past 12 friends, upgrade to a scrolling list if people want more. */
 export function label(name: string, n: number): string {
   const words = name.trim().split(/\s+/);

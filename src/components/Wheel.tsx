@@ -1,6 +1,14 @@
 import { useEffect, useState } from "preact/hooks";
 import type { Friend } from "../lib/state.ts";
-import { hue, label, landing, sliceCenter, slicePath } from "../lib/wheel.ts";
+import {
+  RIM,
+  fontSize,
+  hue,
+  label,
+  landing,
+  sliceCenter,
+  slicePath,
+} from "../lib/wheel.ts";
 
 type Props = {
   friends: Friend[];
@@ -48,9 +56,10 @@ export function Wheel({ friends, pickId, spinning, onLand }: Props) {
               stroke-width="0.015"
             />
             <text
-              transform={`rotate(${sliceCenter(k, n) - 90}) translate(0.3 0)`}
+              transform={`rotate(${sliceCenter(k, n) - 90}) translate(${RIM} 0)`}
+              text-anchor="end"
               fill="#fff"
-              font-size="0.12"
+              font-size={fontSize(label(f.name, n).length, n)}
               dominant-baseline="middle"
             >
               {label(f.name, n)}

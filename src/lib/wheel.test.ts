@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hue, label, landing, slicePath } from "./wheel.ts";
+import { RIM, fontSize, hue, label, landing, slicePath } from "./wheel.ts";
 
 describe("slicePath", () => {
   it("draws a quarter slice from 12 to 3 o clock", () => {
@@ -35,6 +35,23 @@ describe("hue", () => {
       expect(h).toBeLessThan(360);
     }
     expect(hue(1)).toBe(138);
+  });
+});
+
+describe("fontSize", () => {
+  it("keeps the cap for a few friends and shrinks for many", () => {
+    expect(fontSize(10, 4)).toBe(0.12);
+    expect(fontSize(2, 40)).toBeLessThan(0.12);
+    expect(fontSize(2, 40)).toBeGreaterThan(0.08);
+  });
+  it("never spills over the slice edge where the text starts", () => {
+    for (let n = 2; n <= 40; n++) {
+      for (const chars of [1, 2, 6, 10]) {
+        const f = fontSize(chars, n);
+        const inner = RIM - chars * 0.6 * f;
+        expect(f).toBeLessThanOrEqual(2 * inner * Math.sin(Math.PI / n));
+      }
+    }
   });
 });
 
