@@ -1,5 +1,6 @@
 import { useState } from "preact/hooks";
 import { METHODS, link } from "../lib/methods.ts";
+import { BirthdayNote, type WeekBirthday } from "./BirthdayNote.tsx";
 import { countdown, nextMonday, type Friend } from "../lib/state.ts";
 
 type Props = {
@@ -9,6 +10,8 @@ type Props = {
   spinning: boolean;
   now: number;
   streak: number;
+  birthdays: WeekBirthday[];
+  onPick: (id: string) => void;
   canSwitch: boolean;
   onNewLine: () => void;
   onSomeoneElse: () => void;
@@ -22,12 +25,15 @@ export function PickCard({
   spinning,
   now,
   streak,
+  birthdays,
   canSwitch,
   onNewLine,
   onSomeoneElse,
   onContacted,
+  onPick,
 }: Props) {
   const [copied, setCopied] = useState(false);
+
   const copy = () =>
     navigator.clipboard
       ?.writeText(text)
@@ -67,6 +73,7 @@ export function PickCard({
         <p class="timer">
           {countdown(nextMonday(new Date(now)).getTime() - now)}
         </p>
+        <BirthdayNote birthdays={birthdays} onPick={onPick} />
       </section>
     );
   }
@@ -127,6 +134,7 @@ export function PickCard({
         </p>
       )}
       {copied && <p class="note">Copied. Paste it in the chat.</p>}
+      <BirthdayNote birthdays={birthdays} />
     </section>
   );
 }

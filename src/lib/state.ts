@@ -7,6 +7,7 @@ export type Friend = {
   lastContact: string | null;
   method: Method;
   handle: string;
+  birthday: string | null;
 };
 export type Pick = { friendId: string; line: string; week: string };
 export type Entry = { date: string; friendId: string };
@@ -63,6 +64,71 @@ export function pickFriend(
   return ties[Math.floor(random() * ties.length)];
 }
 
+/** The birthday's date in a given year. Feb 29 lands on Mar 1 in other years. */
+export function occurrence(birthday: string, year: number): string {
+  const [, m, d] = birthday.split("-").map(Number);
+  return localDate(new Date(year, m - 1, d));
+}
+
+/** Friends with a birthday in the week starting `week`, earliest first. */
+export function birthdaysInWeek(
+  friends: Friend[],
+  week: string,
+): { friend: Friend; date: string }[] {
+  const [y, m, d] = week.split("-").map(Number);
+  const end = localDate(new Date(y, m - 1, d + 6));
+  return friends
+    .flatMap((friend) => {
+      const b = friend.birthday;
+      if (!b) return [];
+      // the week may straddle a year end, so try both years
+      const date = [y, y + 1]
+        .map((year) => occurrence(b, year))
+        .find((x) => x >= week && x <= end);
+      return date ? [{ friend, date }] : [];
+    })
+    .sort((a, b) => (a.date < b.date ? -1 : 1));
+}
+
+/** A birthday this week outranks everything; otherwise the least recently contacted. */
+export function pickFor(
+  friends: Friend[],
+  now: Date,
+  random = Math.random,
+): Friend | null {
+  const soon = birthdaysInWeek(friends, weekStart(now));
+  if (soon.length === 0) return pickFriend(friends, random);
+  const first = soon.filter((s) => s.date === soon[0].date);
+  return first[Math.floor(random() * first.length)].friend;
+}
+
+export const BIRTHDAY_WEEK_LINES = [
+  "hey {name}, isn't your birthday this week? what are you doing for it?",
+  "{name}! birthday week. any plans, or do I need to make some for you?",
+  "happy almost birthday {name}. let me buy you a coffee this week",
+  "hey {name}, big week for you. how are you celebrating?",
+];
+export const BIRTHDAY_DAY_LINES = [
+  "happy birthday {name}! hope today is a good one",
+  "{name}! happy birthday. what are you up to today?",
+  "happy birthday {name}. you're owed a coffee, name the day",
+];
+
+/** A birthday line in a birthday week, the day's line on the day, otherwise the usual opener. */
+export function lineFor(
+  friend: Friend,
+  now: Date,
+  avoid = "",
+  random = Math.random,
+): string {
+  const hit = birthdaysInWeek([friend], weekStart(now))[0];
+  if (!hit) return pickLine(avoid, random);
+  const pool =
+    hit.date === localDate(now) ? BIRTHDAY_DAY_LINES : BIRTHDAY_WEEK_LINES;
+  const options = pool.filter((l) => l !== avoid);
+  return options[Math.floor(random() * options.length)] ?? pool[0];
+}
+
 /** Keeps this week's pick if it is still valid, otherwise picks fresh. */
 export function ensurePick(
   state: State,
@@ -73,11 +139,11 @@ export function ensurePick(
   const { pick, friends } = state;
   if (pick && pick.week === week && friends.some((f) => f.id === pick.friendId))
     return state;
-  const friend = pickFriend(friends, random);
+  const friend = pickFor(friends, now, random);
   return {
     ...state,
     pick: friend
-      ? { friendId: friend.id, line: pickLine("", random), week }
+      ? { friendId: friend.id, line: lineFor(friend, now, "", random), week }
       : null,
   };
 }
@@ -116,6 +182,8 @@ export type Heat = "fresh" | "warm" | "stale";
 export const heat = (days: number | null): Heat =>
   days === null || days >= 42 ? "stale" : days >= 14 ? "warm" : "fresh";
 
+const isDate = (v: unknown): v is string =>
+  typeof v === "string" && /^\d{4}-\d{2}-\d{2}$/.test(v);
 const isRecord = (v: unknown): v is Record<string, unknown> =>
   typeof v === "object" && v !== null;
 
@@ -129,6 +197,7 @@ function toFriend(v: unknown): Friend | null {
     name: v.name,
     lastContact: v.lastContact,
     method: isMethod(v.method) ? v.method : "share",
+    birthday: isDate(v.birthday) ? v.birthday : null,
     // a handle only means something for a method we still support
     handle: isMethod(v.method) && typeof v.handle === "string" ? v.handle : "",
   };

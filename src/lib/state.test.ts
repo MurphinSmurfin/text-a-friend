@@ -1,13 +1,18 @@
 import { describe, expect, it } from "vitest";
 import {
+  BIRTHDAY_DAY_LINES,
+  BIRTHDAY_WEEK_LINES,
   EMPTY,
   ago,
+  birthdaysInWeek,
   countdown,
   ensurePick,
   fill,
   heat,
+  lineFor,
   loadState,
   nextMonday,
+  pickFor,
   pickFriend,
   streak,
   weekStart,
@@ -20,6 +25,7 @@ const f = (id: string, lastContact: string | null = null): Friend => ({
   lastContact,
   method: "share",
   handle: "",
+  birthday: null,
 });
 const monday = new Date(2026, 9, 19);
 
@@ -102,6 +108,59 @@ describe("ensurePick", () => {
       log: [],
     };
     expect(ensurePick(state, monday).pick).toBeNull();
+  });
+});
+
+describe("birthdays", () => {
+  const b = (
+    id: string,
+    birthday: string,
+    lastContact: string | null = "2026-10-01",
+  ): Friend => ({
+    ...f(id, lastContact),
+    birthday,
+  });
+  it("finds this week's birthdays, earliest first, across a year end", () => {
+    const list = birthdaysInWeek(
+      [b("sat", "1990-10-24"), b("wed", "1985-10-21"), b("no", "1990-03-03")],
+      "2026-10-19",
+    );
+    expect(list.map((x) => [x.friend.id, x.date])).toEqual([
+      ["wed", "2026-10-21"],
+      ["sat", "2026-10-24"],
+    ]);
+    expect(
+      birthdaysInWeek([b("ny", "2000-01-02")], "2026-12-28")[0]?.date,
+    ).toBe("2027-01-02");
+  });
+  it("picks the earliest birthday this week, else the most neglected", () => {
+    const friends = [
+      f("never"),
+      b("sat", "1990-10-24"),
+      b("wed", "1985-10-21"),
+    ];
+    expect(pickFor(friends, monday, () => 0)?.id).toBe("wed");
+    expect(
+      pickFor([f("never"), b("far", "1990-03-03")], monday, () => 0)?.id,
+    ).toBe("never");
+  });
+  it("uses birthday lines in a birthday week and on the day", () => {
+    const sat = b("sat", "1990-10-24");
+    expect(lineFor(sat, monday, "", () => 0)).toBe(BIRTHDAY_WEEK_LINES[0]);
+    expect(lineFor(sat, new Date(2026, 9, 24), "", () => 0)).toBe(
+      BIRTHDAY_DAY_LINES[0],
+    );
+    expect(lineFor(f("plain"), monday, "", () => 0)).not.toContain("birthday");
+  });
+  it("keeps a valid birthday and drops a bad one on load", () => {
+    const raw = JSON.stringify({
+      friends: [b("a", "1990-10-24"), b("c", "soon")],
+      pick: null,
+    });
+    expect(loadState(raw).friends.map((x) => x.birthday)).toEqual([
+      "1990-10-24",
+      null,
+    ]);
   });
 });
 

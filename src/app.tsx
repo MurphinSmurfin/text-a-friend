@@ -3,52 +3,33 @@ import { useBadge } from "./hooks/useBadge.ts";
 import { useHash } from "./hooks/useHash.ts";
 import { useOverride } from "./hooks/useOverride.ts";
 import { useNow } from "./hooks/useNow.ts";
-import { AddFriend, type Draft } from "./components/AddFriend.tsx";
+import { useStoredState } from "./hooks/useStoredState.ts";
+import { AddFriend } from "./components/AddFriend.tsx";
+import { BirthdaysPage } from "./components/BirthdaysPage.tsx";
 import { SettingsPage } from "./components/SettingsPage.tsx";
 import { FriendList } from "./components/FriendList.tsx";
 import { Nav } from "./components/Nav.tsx";
 import { PickCard } from "./components/PickCard.tsx";
 import { Wheel } from "./components/Wheel.tsx";
 import { YearCard } from "./components/YearCard.tsx";
+import { makeActions } from "./actions.ts";
 import {
-  EMPTY,
+  birthdaysInWeek,
   ensurePick,
   fill,
-  loadState,
   localDate,
-  pickFriend,
   streak,
   weekStart,
-  type State,
 } from "./lib/state.ts";
-import { pickLine } from "./lib/prompts.ts";
 import { yearCardOn } from "./lib/flags.ts";
 import "./app.css";
 
-const KEY = "text-a-friend";
-
-function read(): State {
-  try {
-    return ensurePick(loadState(localStorage.getItem(KEY)), new Date());
-  } catch {
-    return EMPTY;
-  }
-}
-
 export function App() {
-  const [state, setState] = useState(read);
+  const [state, setState] = useStoredState();
   const now = useNow(1000);
   const page = useHash();
   const yearCard = useOverride("yearcard");
   const [spinning, setSpinning] = useState(false);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      // private mode or full storage: the app still works for this visit
-    }
-  }, [state]);
 
   const today = localDate(new Date(now));
   const week = weekStart(new Date(now));
@@ -61,46 +42,8 @@ export function App() {
     }
   }, [week]);
 
-  const update = (fn: (s: State) => State) =>
-    setState((s) => ensurePick(fn(s), new Date()));
-  const add = (draft: Draft) =>
-    update((s) => ({
-      ...s,
-      friends: [
-        ...s.friends,
-        { ...draft, id: crypto.randomUUID(), lastContact: null },
-      ],
-    }));
-  // shortcut: no editing a friend's method, remove and re-add; upgrade when someone asks
-  const remove = (id: string) =>
-    update((s) => ({ ...s, friends: s.friends.filter((f) => f.id !== id) }));
-  const contacted = (id: string) =>
-    update((s) => ({
-      ...s,
-      friends: s.friends.map((f) =>
-        f.id === id ? { ...f, lastContact: today } : f,
-      ),
-      weeks: s.weeks.includes(week) ? s.weeks : [...s.weeks, week],
-      log: [...s.log, { date: today, friendId: id }],
-    }));
-  const someoneElse = () => {
-    setSpinning(true);
-    update((s) => {
-      const friend = pickFriend(
-        s.friends.filter((f) => f.id !== s.pick?.friendId),
-      );
-      return friend
-        ? {
-            ...s,
-            pick: { friendId: friend.id, line: pickLine(s.pick?.line), week },
-          }
-        : s;
-    });
-  };
-  const newLine = () =>
-    update((s) =>
-      s.pick ? { ...s, pick: { ...s.pick, line: pickLine(s.pick.line) } } : s,
-    );
+  const { add, remove, setBirthday, contacted, someoneElse, choose, newLine } =
+    makeActions(setState, () => setSpinning(true));
 
   const current = state.friends.find((f) => f.id === state.pick?.friendId);
   const weeksInARow = streak(state.weeks, new Date());
@@ -115,6 +58,12 @@ export function App() {
         <SettingsPage
           state={state}
           onRestore={(s) => setState(ensurePick(s, new Date(now)))}
+        />
+      ) : page === "#birthdays" ? (
+        <BirthdaysPage
+          friends={state.friends}
+          today={today}
+          onSet={setBirthday}
         />
       ) : (
         <main>
@@ -138,6 +87,14 @@ export function App() {
             onContacted={contacted}
             now={now}
             streak={weeksInARow}
+            birthdays={birthdaysInWeek(state.friends, week).map((b) => ({
+              id: b.friend.id,
+              name: b.friend.name,
+              date: b.date,
+              done:
+                b.friend.lastContact != null && b.friend.lastContact >= week,
+            }))}
+            onPick={choose}
           />
 
           <AddFriend onAdd={add} />

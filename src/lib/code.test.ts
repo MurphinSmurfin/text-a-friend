@@ -7,6 +7,7 @@ const strip = (f: Friend) => ({
   lastContact: f.lastContact,
   method: f.method,
   handle: f.handle,
+  birthday: f.birthday,
 });
 const state: State = {
   friends: [
@@ -16,14 +17,23 @@ const state: State = {
       lastContact: "2026-10-19",
       method: "whatsapp",
       handle: "+60123456789",
+      birthday: null,
     },
-    { id: "y", name: "Jo", lastContact: null, method: "share", handle: "" },
+    {
+      id: "y",
+      name: "Jo",
+      lastContact: null,
+      method: "share",
+      handle: "",
+      birthday: null,
+    },
     {
       id: "z",
       name: "Priya",
       lastContact: "2026-09-01",
       method: "instagram",
       handle: "priya.k",
+      birthday: "1990-10-24",
     },
   ],
   pick: { friendId: "x", line: "hi", week: "2026-10-19" },

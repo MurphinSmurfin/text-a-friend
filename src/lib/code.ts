@@ -33,6 +33,7 @@ export async function encode(state: State): Promise<string> {
       f.lastContact ?? 0,
       METHOD_IDS.indexOf(f.method),
       f.handle,
+      f.birthday ?? 0,
     ]),
     state.weeks,
     state.log.map((e) => [
@@ -55,13 +56,16 @@ export async function decode(code: string): Promise<State | null> {
     if (!Array.isArray(v) || v[0] !== VERSION || !Array.isArray(v[1]))
       return null;
     const friends = v[1].map((row: unknown) => {
-      const [name, last, method, handle] = Array.isArray(row) ? row : [];
+      const [name, last, method, handle, birthday] = Array.isArray(row)
+        ? row
+        : [];
       return {
         id: crypto.randomUUID(),
         name,
         lastContact: last || null,
         method: typeof method === "number" ? METHOD_IDS[method] : undefined,
         handle,
+        birthday: birthday || null,
       };
     });
     // loadState does the validation, so a tampered row is dropped rather than trusted

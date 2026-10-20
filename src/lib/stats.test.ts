@@ -8,6 +8,7 @@ const f = (id: string, lastContact: string | null): Friend => ({
   lastContact,
   method: "share",
   handle: "",
+  birthday: null,
 });
 const now = new Date(2026, 9, 20);
 
