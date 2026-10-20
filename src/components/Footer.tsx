@@ -15,7 +15,7 @@ export function Footer() {
     <footer class="foot">
       <span>© {new Date().getFullYear()} MurphinSmurfin</span>
       <a
-        href="https://github.com/MurphinSmurfin"
+        href="https://github.com/MurphinSmurfin/text-a-friend"
         class="icon-link"
         target="_blank"
         rel="noopener"
