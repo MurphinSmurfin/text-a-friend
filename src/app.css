@@ -1,0 +1,337 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.125rem);
+  -webkit-text-size-adjust: 100%;
+  --bg: light-dark(#fafaf9, #151515);
+  --fg: light-dark(#1c1917, #f0efed);
+  --muted: light-dark(#78716c, #a09a94);
+  --card: light-dark(#ffffff, #222222);
+  --line: light-dark(#e7e5e4, #333333);
+  --accent: light-dark(#1d4ed8, #7fa4ff);
+  --accent-fg: light-dark(#ffffff, #0b1a3a);
+  --fresh: light-dark(#15803d, #4ade80);
+  --warm: light-dark(#b45309, #fbbf24);
+  --stale: light-dark(#b91c1c, #f87171);
+  --control: 2.75rem; /* 44px: one height for every input, select and button */
+  --radius: 0.6rem;
+}
+body {
+  margin: 0;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: var(--bg);
+  color: var(--fg);
+}
+img,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+main {
+  width: min(100% - 2rem, 36rem);
+  margin-inline: auto;
+  padding-block: 1.5rem 4rem;
+  display: grid;
+  gap: 1.5rem;
+}
+h2 {
+  font-size: clamp(1.75rem, 1.2rem + 2.5vw, 2.5rem);
+  line-height: 1.1;
+  margin: 0.25rem 0 0.5rem;
+  overflow-wrap: anywhere;
+}
+.eyebrow {
+  margin: 0;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100% - 2rem, 36rem);
+  margin-inline: auto;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+.nav h1 {
+  flex: 1;
+  font-size: 1.25rem;
+  margin: 0;
+}
+.nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: var(--control);
+  color: var(--fg);
+  font-weight: 600;
+  text-decoration: none;
+}
+.nav .back {
+  margin-left: -0.5rem;
+  padding-right: 0.5rem;
+}
+.nav .icon-link {
+  width: var(--control);
+  justify-content: center;
+  margin-right: -0.5rem;
+}
+.steps {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.streak {
+  margin: 0;
+  font-weight: 600;
+  color: var(--warm);
+  white-space: nowrap;
+}
+.line {
+  font-size: 1.1rem;
+}
+.note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.wheel {
+  width: min(100%, 20rem);
+  margin-inline: auto;
+  display: block;
+  color: var(--fg);
+}
+.rotor {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 3s cubic-bezier(0.15, 0.85, 0.2, 1);
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+.card p {
+  margin: 0 0 1rem;
+}
+.card .eyebrow {
+  margin: 0;
+}
+.card .note {
+  margin: 0.75rem 0 0;
+}
+
+/* Every control shares one box: same height, padding, border and radius. */
+input,
+select,
+button,
+.button {
+  height: var(--control);
+  padding: 0 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--card);
+  color: inherit;
+}
+input,
+select {
+  width: 100%;
+}
+select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%238a8a8a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+  background-size: 1rem;
+}
+button,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button.secondary {
+  background: var(--card);
+  border-color: var(--line);
+  color: var(--accent);
+}
+button.icon {
+  width: var(--control);
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+  font-size: 1.25rem;
+}
+
+/* Card actions: the send button on its own row, the rest in equal columns. */
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.5rem;
+}
+.actions > :first-child {
+  grid-column: 1 / -1;
+}
+
+/* Add form: stacked fields, every control full width, button last. */
+.add {
+  display: grid;
+  gap: 0.75rem;
+}
+label {
+  display: block;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+}
+
+.friends {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.friends li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--line);
+}
+.dot {
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+}
+.who {
+  flex: 1;
+  display: grid;
+  overflow-wrap: anywhere;
+}
+.who small {
+  color: var(--muted);
+}
+.when {
+  white-space: nowrap;
+  font-weight: 600;
+}
+.heat-fresh .when {
+  color: var(--fresh);
+}
+.heat-warm .when {
+  color: var(--warm);
+}
+.heat-stale .when {
+  color: var(--stale);
+}
+
+.timer {
+  font-size: clamp(1.75rem, 1.2rem + 2.5vw, 2.5rem);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  margin: 0.25rem 0 0;
+}
+
+dialog {
+  width: min(100% - 2rem, 24rem);
+  padding: 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: var(--card);
+  color: var(--fg);
+}
+dialog::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+dialog h2 {
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+dialog p {
+  margin: 0 0 1.25rem;
+}
+.pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+button.danger {
+  background: var(--stale);
+  border-color: var(--stale);
+  color: #fff;
+}
+
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: inherit;
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  resize: vertical;
+  margin-bottom: 0.75rem;
+}
+a {
+  color: var(--accent);
+}
+
+.field {
+  margin-bottom: 0.75rem;
+}
+.year {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+}
