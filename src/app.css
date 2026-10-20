@@ -345,6 +345,9 @@ dialog p {
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
 }
+.tabs {
+  margin-bottom: 1rem;
+}
 button.danger {
   background: var(--stale);
   border-color: var(--stale);

@@ -18,6 +18,7 @@ export function BirthdaysPage({ friends, today, onSet }: Props) {
   const [shown, setShown] = useState({ year: year0, month: month0 });
   const [who, setWho] = useState(friends[0]?.id ?? "");
   const [date, setDate] = useState("");
+  const [tab, setTab] = useState<"upcoming" | "past">("upcoming");
   const selected = friends.find((f) => f.id === who);
 
   const move = (by: number) =>
@@ -99,20 +100,41 @@ export function BirthdaysPage({ friends, today, onSet }: Props) {
       />
 
       <section class="card">
-        <p class="eyebrow">Upcoming</p>
-        <BirthdayList
-          items={upcoming(friends, today)}
-          when={(n) =>
-            n === 0 ? "today" : n === 1 ? "tomorrow" : `in ${n} days`
-          }
-          empty="Nothing in the next six months."
-        />
-        <p class="eyebrow">Past</p>
-        <BirthdayList
-          items={past(friends, today)}
-          when={(n) => (n === 1 ? "yesterday" : `${n} days ago`)}
-          empty="Nothing in the last six months."
-        />
+        <div class="pair tabs" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "upcoming"}
+            class={tab === "upcoming" ? "" : "secondary"}
+            onClick={() => setTab("upcoming")}
+          >
+            Upcoming
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab === "past"}
+            class={tab === "past" ? "" : "secondary"}
+            onClick={() => setTab("past")}
+          >
+            Past
+          </button>
+        </div>
+        {tab === "past" ? (
+          <BirthdayList
+            items={past(friends, today)}
+            when={(n) => (n === 1 ? "yesterday" : `${n} days ago`)}
+            empty="Nothing in the last six months."
+          />
+        ) : (
+          <BirthdayList
+            items={upcoming(friends, today)}
+            when={(n) =>
+              n === 0 ? "today" : n === 1 ? "tomorrow" : `in ${n} days`
+            }
+            empty="Nothing in the next six months."
+          />
+        )}
       </section>
     </main>
   );
