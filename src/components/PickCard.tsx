@@ -50,13 +50,16 @@ export function PickCard({
       <section class="card">
         <p class="eyebrow">How it works</p>
         <ol class="steps">
-          <li>Add a few friends below.</li>
+          <li>Add a few friends.</li>
           <li>
             Every Monday the wheel picks one and writes your opening line.
           </li>
           <li>Send it, then tap "I reached out" to keep your streak.</li>
           <li>Add this page to your home screen so your list sticks around.</li>
         </ol>
+        <a href="#friends" class="button">
+          Add friends
+        </a>
       </section>
     );
   }

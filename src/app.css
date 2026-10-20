@@ -84,7 +84,12 @@ h2 {
 }
 .nav h1 {
   flex: 1;
-  font-size: 1.25rem;
+  font-size: clamp(
+    1.05rem,
+    0.6rem + 2.5vw,
+    1.25rem
+  ); /* three icons beside it at 320px */
+  white-space: nowrap;
   margin: 0;
 }
 .nav a {
@@ -110,6 +115,9 @@ h2 {
   padding-left: 1.25rem;
   display: grid;
   gap: 0.5rem;
+}
+.steps + .button {
+  margin-top: 1rem;
 }
 .streak {
   margin: 0;
@@ -259,6 +267,9 @@ label {
 }
 .who small {
   color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .when {
   white-space: nowrap;

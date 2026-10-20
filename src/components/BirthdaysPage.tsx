@@ -84,7 +84,9 @@ export function BirthdaysPage({ friends, today, onSet }: Props) {
           </button>
         )}
         {friends.length === 0 && (
-          <p class="note">Add a friend on the home page first.</p>
+          <p class="note">
+            Add a friend on the <a href="#friends">Friends page</a> first.
+          </p>
         )}
       </form>
 

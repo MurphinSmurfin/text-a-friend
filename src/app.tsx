@@ -59,6 +59,11 @@ export function App() {
           state={state}
           onRestore={(s) => setState(ensurePick(s, new Date(now)))}
         />
+      ) : page === "#friends" ? (
+        <main>
+          <AddFriend onAdd={add} />
+          <FriendList friends={state.friends} today={today} onRemove={remove} />
+        </main>
       ) : page === "#birthdays" ? (
         <BirthdaysPage
           friends={state.friends}
@@ -97,8 +102,6 @@ export function App() {
             onPick={choose}
           />
 
-          <AddFriend onAdd={add} />
-          <FriendList friends={state.friends} today={today} onRemove={remove} />
           {yearCardOn(today, yearCard) && <YearCard state={state} now={now} />}
         </main>
       )}

@@ -14,7 +14,7 @@ You add a few friends and how you'd reach them. Every Monday a roulette wheel pi
 
 One tap opens Messages, WhatsApp or email with the line already typed. Instagram can't do that, so it opens the profile and copies the line for you to paste. Anything else goes through the share sheet.
 
-When you've sent it, tap "I reached out". Your streak goes up and a countdown runs to the next spin on Monday. The list colours itself green, amber and red by how long it's been since you talked to each person, which is the app's polite way of nagging.
+When you've sent it, tap "I reached out". Your streak goes up and a countdown runs to the next spin on Monday. The friends list, on its own page, colours itself green, amber and red by how long it's been since you talked to each person, which is the app's polite way of nagging.
 
 There's no account and no server. Your friends' names and numbers stay in your browser. Settings has a backup that squashes the whole list into one line of text you can paste on another phone, a Monday reminder you can drop into your calendar, and the privacy notes. Installed on a home screen, the icon shows a dot until this week's text is sent. The calendar page holds birthdays: in a friend's birthday week the wheel picks them and the line is a birthday one, and if two people share a week the wheel takes the earlier birthday and "Someone else" jumps to the other. In the last weeks of the year a shareable "your year in texts" card appears.
 
