@@ -2,7 +2,7 @@
 
 Have you ever felt that you wanted to talk to someone but don't really know who, what, or how to talk to them? Then you give up the thought entirely and blame it all on the internet for making you soft and introverted since a lot of things can be done virtually without actually interacting with anyone in person. Text-A-Friend helps you decide and gives you the push you need to get up and going again.
 
-<p align="center"><img src="spin.gif" width="320" alt="The wheel spinning on an iPhone and landing on this week's friend"></p>
+<p align="center"><img src="demo.gif" width="320" alt="The wheel spinning on an iPhone and landing on this week's friend"></p>
 
 Try it at [text-a-friend.vercel.app](https://text-a-friend.vercel.app/). On an iPhone, open it in Safari, tap Share, then Add to Home Screen so it keeps your list.
 
