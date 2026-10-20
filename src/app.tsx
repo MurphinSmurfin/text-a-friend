@@ -7,6 +7,7 @@ import { useStoredState } from "./hooks/useStoredState.ts";
 import { AddFriend } from "./components/AddFriend.tsx";
 import { BirthdaysPage } from "./components/BirthdaysPage.tsx";
 import { SettingsPage } from "./components/SettingsPage.tsx";
+import { Footer } from "./components/Footer.tsx";
 import { FriendList } from "./components/FriendList.tsx";
 import { Nav } from "./components/Nav.tsx";
 import { PickCard } from "./components/PickCard.tsx";
@@ -105,6 +106,7 @@ export function App() {
           {yearCardOn(today, yearCard) && <YearCard state={state} now={now} />}
         </main>
       )}
+      <Footer />
     </>
   );
 }

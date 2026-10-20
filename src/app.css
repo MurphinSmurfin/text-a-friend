@@ -53,12 +53,42 @@ textarea {
   outline-offset: 2px;
 }
 
+/* nav, page, footer: the footer stays at the bottom on short pages */
+#app {
+  min-height: calc(
+    100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom)
+  );
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
 main {
   width: min(100% - 2rem, 36rem);
   margin-inline: auto;
-  padding-block: 1.5rem 4rem;
+  padding-block: 1.5rem 2.5rem;
   display: grid;
+  align-content: start;
   gap: 1.5rem;
+}
+.foot {
+  width: min(100% - 2rem, 36rem);
+  margin-inline: auto;
+  padding-block: 0.5rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.foot span {
+  flex: 1;
+}
+.foot a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--control);
+  color: inherit;
 }
 h2 {
   font-size: clamp(1.75rem, 1.2rem + 2.5vw, 2.5rem);
@@ -105,7 +135,7 @@ h2 {
   margin-left: -0.5rem;
   padding-right: 0.5rem;
 }
-.nav .icon-link {
+.icon-link {
   width: var(--control);
   justify-content: center;
   margin-right: -0.5rem;
