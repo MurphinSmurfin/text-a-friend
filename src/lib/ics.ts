@@ -11,7 +11,7 @@ export function mondayReminder(
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Text a friend//EN",
+    "PRODID:-//Text-A-Friend//EN",
     "BEGIN:VEVENT",
     `UID:monday-${local(start)}@text-a-friend`,
     `DTSTAMP:${now.toISOString().replace(/[-:]/g, "").slice(0, 15)}Z`,

@@ -29,7 +29,7 @@ function draw(canvas: HTMLCanvasElement, stats: YearStats, slices: number) {
   }
   c.fillStyle = "#a09a94";
   c.font = `600 36px ${FONT}`;
-  c.fillText("TEXT A FRIEND", 80, 140);
+  c.fillText("TEXT-A-FRIEND", 80, 140);
   c.fillStyle = "#f0efed";
   c.font = `700 120px ${FONT}`;
   c.fillText(String(stats.year), 80, 280);

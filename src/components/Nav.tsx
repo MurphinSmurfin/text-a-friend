@@ -46,7 +46,7 @@ export function Nav({ page }: { page: string }) {
   }
   return (
     <nav class="nav" aria-label="Main">
-      <h1>Text a friend</h1>
+      <h1>Text-A-Friend</h1>
       <a href="#settings" class="icon-link" aria-label="Settings">
         {sliders}
       </a>

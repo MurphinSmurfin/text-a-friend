@@ -1,110 +1,50 @@
-<div align="center">
-  <img src="public/icons/icon.svg" width="88" alt="">
-  <h1>Text a friend</h1>
-  <p><strong>A roulette wheel that picks the friend you've been neglecting and writes your opening line.</strong></p>
-  <p>
-    <img alt="JS 15 KB gzipped" src="https://img.shields.io/badge/JS-15%20KB%20gzipped-1d4ed8">
-    <img alt="1 runtime dependency" src="https://img.shields.io/badge/runtime%20deps-1-1d4ed8">
-    <img alt="46 tests" src="https://img.shields.io/badge/tests-46%20passing-15803d">
-    <img alt="No backend" src="https://img.shields.io/badge/backend-none-555">
-    <img alt="PWA" src="https://img.shields.io/badge/PWA-installable-7c3aed">
-  </p>
-  <p>
-    <a href="https://text-a-friend.vercel.app/">Live demo</a> ·
-    <a href="#how-it-works">How it works</a> ·
-    <a href="#features">Features</a> ·
-    <a href="#under-the-hood">Under the hood</a> ·
-    <a href="#run-it-locally">Run it</a>
-  </p>
-</div>
+# Text-A-Friend
 
-Every Monday a roulette wheel picks the friend you've gone longest without talking to and hands you a ready-to-send opening line. One tap opens Messages, WhatsApp or email with the line already typed, or the share sheet for anything else. Mark it done to grow your weekly streak. No account, no server, nothing leaves your phone.
+Have you ever felt that you wanted to talk to someone but don't really know who, what, or how to talk to them? Then you give up the thought entirely and blame it all on the internet for making you soft and introverted since a lot of things can be done virtually without actually interacting with anyone in person. Text-A-Friend helps you decide and gives you the push you need to get up and going again.
 
 <p align="center"><img src="spin.gif" width="320" alt="The wheel spinning on an iPhone and landing on this week's friend"></p>
 
-## Live
+Try it at [text-a-friend.vercel.app](https://text-a-friend.vercel.app/). On an iPhone, open it in Safari, tap Share, then Add to Home Screen so it keeps your list.
 
-**→ [text-a-friend.vercel.app](https://text-a-friend.vercel.app/)** · Open it in Safari, tap Share, then Add to Home Screen.
+![JavaScript size](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/MurphinSmurfin/text-a-friend/main/badges/js.json) ![Runtime dependencies](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/MurphinSmurfin/text-a-friend/main/badges/deps.json) ![Tests](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/MurphinSmurfin/text-a-friend/main/badges/tests.json) ![No backend](https://img.shields.io/badge/backend-none-555) ![PWA](https://img.shields.io/badge/PWA-installable-7c3aed)
 
-## Why
+## What it does
 
-Keeping up with friends is the thing everyone means to do and nobody schedules. Loneliness is the problem a whole generation names first, and the fix is embarrassingly small: one text, to one person, once a week. This app removes the two decisions that stop that text from happening, _who_ and _what to say_, and makes the whole thing take ten seconds.
+You add a few friends and how you'd reach them. Every Monday a roulette wheel picks one. It's rigged: whoever you've gone longest without talking to wins. It also writes the first line for you, something like "hello from the void, Josh. how are things actually going? no rush", because the blank message box is where the thought usually dies. If the line doesn't sound like you, reroll it.
 
-## How it works
+One tap opens Messages, WhatsApp or email with the line already typed. Instagram can't do that, so it opens the profile and copies the line for you to paste. Anything else goes through the share sheet.
 
-1. **Add a few friends** with how you reach them: phone, WhatsApp, Instagram, email, or just the share sheet.
-2. **Every Monday the wheel spins.** It's rigged: whoever you've neglected longest wins, ties are random.
-3. **Send the line** it wrote, then tap _I reached out_. Your streak grows and a countdown runs to the next spin.
+When you've sent it, tap "I reached out". Your streak goes up and a countdown runs to the next spin on Monday. The list colours itself green, amber and red by how long it's been since you talked to each person, which is the app's polite way of nagging.
 
-## Features
+There's no account and no server. Your friends' names and numbers stay in your browser. Settings has a backup that squashes the whole list into one line of text you can paste on another phone, a Monday reminder you can drop into your calendar, and the privacy notes. Installed on a home screen, the icon shows a dot until this week's text is sent. In the last weeks of the year a shareable "your year in texts" card appears.
 
-|                                    |                                                                                                                                                                      |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 🎡 **Rigged roulette**             | Inline SVG wheel, one slice per friend, lands on the least-recently-contacted. Spins only when you ask it to.                                                        |
-| 💬 **Lines you can actually send** | First-person openers with the name filled in. Reroll if one doesn't sound like you.                                                                                  |
-| 🔗 **Real deep links**             | SMS, WhatsApp and email open with the text already typed. Instagram opens the profile and copies the line for you. A country picker builds the international number. |
-| 🔥 **Streaks and a countdown**     | Consecutive weeks reached out, and a live timer to Monday 00:00 after you've done this week's text.                                                                  |
-| 🟢🟠🔴 **The list nags**           | Last-contact turns green, amber, red. Removing a friend you've texted asks first.                                                                                    |
-| 🧾 **Backup code**                 | Your whole list squashed into one opaque line, about 230 characters for ten friends. Paste it on any device to restore. No file, no login.                           |
-| 📅 **Monday reminder**             | Downloads a repeating calendar event. Reminders without notification permission or a server.                                                                         |
-| 🔴 **Icon badge**                  | Installed to a home screen, the icon shows a dot until this week's text is sent.                                                                                     |
-| 🖼️ **Your year in texts**          | A shareable stats card drawn on a canvas, switched on for the last weeks of the year.                                                                                |
-| ♿ **Accessible by default**       | Labels on every input, native `<dialog>`, 44px targets, visible focus, reduced-motion respected.                                                                     |
+## How it's built
 
-## Under the hood
+Preact, Vite and TypeScript. One runtime dependency, which is Preact at 7 KB. The whole app is 15 KB of JavaScript gzipped and under 2 KB of CSS, with system fonts and no component library. State is `useState` plus `localStorage`, and every read from storage is validated so a bad save can't break the app. There are 46 tests, all on the pure functions in `src/lib`, run by Vitest.
 
-|                      |                                                                                |
-| -------------------- | ------------------------------------------------------------------------------ |
-| Framework            | [Preact](https://preactjs.com) + [Vite](https://vite.dev) + TypeScript, strict |
-| Runtime dependencies | **1** (`preact`, 7 KB). Everything else is the platform.                       |
-| JavaScript shipped   | **15 KB gzipped**                                                              |
-| Styles               | 1.8 KB of plain CSS, system fonts, `light-dark()` for themes                   |
-| State                | `useState` + `localStorage`, validated on every read                           |
-| Routing              | A ten-line hook that watches the URL hash                                      |
-| Tests                | **46**, all on pure functions in `src/lib`, run by Vitest                      |
-| Backend              | None. Static files on a CDN.                                                   |
+A few things that took some figuring out:
 
-A few bits worth reading:
-
-- **The wheel** ([`lib/wheel.ts`](src/lib/wheel.ts)) is geometry, not a library: slice paths from angles, a `landing()` function that adds four full turns and stops on the winner, golden-angle hues so neighbouring slices never clash. The spin is one CSS transition. The pivot needs `transform-box: fill-box`, because a viewBox with a negative origin sends `transform-origin: 50% 50%` to the wrong corner.
-- **The backup code** ([`lib/code.ts`](src/lib/code.ts)) is compact JSON → the browser's built-in deflate → base64url. Restoring reverses it and runs the result through the same validator that guards `localStorage`, so a tampered code drops bad rows instead of trusting them.
-- **The Monday reminder** ([`lib/ics.ts`](src/lib/ics.ts)) hand-writes a VCALENDAR with `RRULE:FREQ=WEEKLY;BYDAY=MO`, which every phone calendar imports as a repeating event.
-- **Deep links** ([`lib/methods.ts`](src/lib/methods.ts)) use the one SMS separator both iOS and Android accept, `?&body=`, and `wa.me` for WhatsApp with the number normalised to E.164.
+- The wheel is inline SVG drawn from angles, and the spin is one CSS transition. At first it spun clean off the screen. A viewBox with a negative origin puts `transform-origin: 50% 50%` at the wrong corner, and `transform-box: fill-box` is the fix. See [`lib/wheel.ts`](src/lib/wheel.ts).
+- The backup code is compact JSON, compressed with the browser's built-in deflate, then base64url. Ten friends come out to about 230 characters. Restoring runs the result through the same validator as storage, so a tampered code drops bad rows instead of breaking things. See [`lib/code.ts`](src/lib/code.ts).
+- The Monday reminder is a hand-written calendar file with `RRULE:FREQ=WEEKLY;BYDAY=MO`. Phone calendars import it as a repeating event, so there's no notification permission to ask for. See [`lib/ics.ts`](src/lib/ics.ts).
+- SMS links use `?&body=` because that's the one separator both iOS and Android accept. WhatsApp gets the number in international format from a country picker. See [`lib/methods.ts`](src/lib/methods.ts).
 
 ## Privacy
 
-There is no server, no account and no analytics. Names and contact handles live in this browser's local storage and never leave the device. Private browsing wipes them when the window closes, and Safari deletes site data after seven days without a visit unless the page is on the home screen, so install it, or keep a backup code.
+There is no server behind this and no analytics in it, and you never sign in to anything. Nothing leaves your device. Private browsing wipes the list when you close the window, and Safari deletes site data after seven days without a visit unless the page is on your home screen. So install it, or keep a backup code somewhere.
 
-## Run it locally
+## Run it yourself
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173
-npm test         # 46 tests
-npm run build    # prints the bundle size
+npm run dev
+npm test
+npm run build
 ```
 
-## Project structure
+## Not done yet
 
-```
-src/
-  app.tsx            root: state, actions, the two pages
-  app.css            all styles
-  components/        Wheel, PickCard, AddFriend, FriendList, YearCard, Nav, SettingsPage
-  hooks/             useNow, useHash, useBadge, useOverride
-  lib/               pure logic with tests: state, wheel, methods, countries, code, stats, ics, flags
-public/              manifest and icons
-```
-
-## Roadmap
-
-- [ ] Drag to spin
-- [ ] Snooze a friend for a few weeks
-- [ ] Birthdays rig the wheel
-- [ ] Your own inside-joke lines per friend
-
----
-
-<div align="center">
-  <sub>Built as a small, finished thing. One screen, one job, loads instantly, installs on a phone.</sub>
-</div>
+- Drag to spin
+- Snooze a friend for a few weeks
+- Birthdays rig the wheel
+- Your own inside-joke lines per friend
