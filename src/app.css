@@ -212,7 +212,10 @@ button.icon {
 /* Card actions: the send button on its own row, the rest in equal columns. */
 .actions {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(max(9rem, 40%), 1fr)
+  ); /* never more than two columns */
   gap: 0.5rem;
 }
 .actions > :first-child {
@@ -334,4 +337,21 @@ a {
   height: auto;
   border-radius: 0.75rem;
   margin-bottom: 0.75rem;
+}
+
+.actions > .wide {
+  grid-column: 1 / -1;
+}
+
+/* iOS draws date and time inputs at their own size unless appearance is reset. */
+input[type="time"] {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+}
+input[type="time"]::-webkit-date-and-time-value {
+  text-align: left;
+  min-height: 1.3em;
 }

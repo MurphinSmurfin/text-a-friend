@@ -10,7 +10,7 @@
     <img alt="PWA" src="https://img.shields.io/badge/PWA-installable-7c3aed">
   </p>
   <p>
-    <a href="#live">Live</a> ·
+    <a href="https://text-a-friend.vercel.app/">Live demo</a> ·
     <a href="#how-it-works">How it works</a> ·
     <a href="#features">Features</a> ·
     <a href="#under-the-hood">Under the hood</a> ·
@@ -20,11 +20,11 @@
 
 Every Monday a roulette wheel picks the friend you've gone longest without talking to and hands you a ready-to-send opening line. One tap opens Messages, WhatsApp or email with the line already typed, or the share sheet for anything else. Mark it done to grow your weekly streak. No account, no server, nothing leaves your phone.
 
-![Text a friend on an iPhone: the wheel, this week's pick and the opening line](screenshot.webp)
+<p align="center"><img src="spin.gif" width="320" alt="The wheel spinning on an iPhone and landing on this week's friend"></p>
 
 ## Live
 
-**→ coming soon** · Open it in Safari, tap Share, then Add to Home Screen.
+**→ [text-a-friend.vercel.app](https://text-a-friend.vercel.app/)** · Open it in Safari, tap Share, then Add to Home Screen.
 
 ## Why
 

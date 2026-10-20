@@ -114,7 +114,7 @@ export function PickCard({
         </button>
         <button
           type="button"
-          class="secondary"
+          class="secondary wide"
           onClick={() => onContacted(friend.id)}
         >
           I reached out
