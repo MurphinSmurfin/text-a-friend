@@ -9,7 +9,13 @@ export type Friend = {
   handle: string;
   birthday: string | null;
 };
-export type Pick = { friendId: string; line: string; week: string };
+export type Pick = {
+  friendId: string;
+  line: string;
+  week: string;
+  /** True once the user has spun for this pick. A fresh week's pick is false and stays hidden until then. */
+  spun?: boolean;
+};
 export type Entry = { date: string; friendId: string };
 export type State = {
   friends: Friend[];
@@ -143,7 +149,12 @@ export function ensurePick(
   return {
     ...state,
     pick: friend
-      ? { friendId: friend.id, line: lineFor(friend, now, "", random), week }
+      ? {
+          friendId: friend.id,
+          line: lineFor(friend, now, "", random),
+          week,
+          spun: false,
+        }
       : null,
   };
 }
@@ -208,7 +219,8 @@ const isPick = (v: unknown): v is Pick =>
   isRecord(v) &&
   typeof v.friendId === "string" &&
   typeof v.line === "string" &&
-  typeof v.week === "string";
+  typeof v.week === "string" &&
+  (v.spun === undefined || typeof v.spun === "boolean");
 
 /** Reads saved state. Malformed friends are dropped, anything worse falls back to empty. */
 export function loadState(raw: string | null): State {
@@ -218,7 +230,8 @@ export function loadState(raw: string | null): State {
     if (!isRecord(v) || !Array.isArray(v.friends)) return EMPTY;
     return {
       friends: v.friends.flatMap((f: unknown) => toFriend(f) ?? []),
-      pick: isPick(v.pick) ? v.pick : null,
+      // a pick saved before `spun` existed was already on screen, so it counts as spun
+      pick: isPick(v.pick) ? { ...v.pick, spun: v.pick.spun ?? true } : null,
       weeks: Array.isArray(v.weeks)
         ? v.weeks.filter((w: unknown) => typeof w === "string")
         : [],

@@ -1,18 +1,18 @@
 import { useState } from "preact/hooks";
-import { METHODS, link } from "../lib/methods.ts";
+import { METHODS } from "../lib/methods.ts";
 import { BirthdayNote, type WeekBirthday } from "./BirthdayNote.tsx";
-import { countdown, nextMonday, type Friend } from "../lib/state.ts";
+import { SendButton } from "./SendButton.tsx";
+import type { Friend } from "../lib/state.ts";
 
 type Props = {
-  friend?: Friend;
+  friend: Friend;
   text: string;
-  done: boolean;
+  revealed: boolean;
   spinning: boolean;
-  now: number;
   streak: number;
   birthdays: WeekBirthday[];
-  onPick: (id: string) => void;
   canSwitch: boolean;
+  onSpin: () => void;
   onNewLine: () => void;
   onSomeoneElse: () => void;
   onContacted: (id: string) => void;
@@ -21,62 +21,34 @@ type Props = {
 export function PickCard({
   friend,
   text,
-  done,
+  revealed,
   spinning,
-  now,
   streak,
   birthdays,
   canSwitch,
+  onSpin,
   onNewLine,
   onSomeoneElse,
   onContacted,
-  onPick,
 }: Props) {
   const [copied, setCopied] = useState(false);
+  const flash = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+  const eyebrow = `This week${streak > 0 ? ` · ${streak}-week streak` : ""}`;
 
-  const copy = () =>
-    navigator.clipboard
-      ?.writeText(text)
-      .then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      })
-      .catch(() => {});
-  const share = () =>
-    navigator.share ? navigator.share({ text }).catch(() => {}) : copy();
-
-  if (!friend) {
+  if (!revealed) {
     return (
       <section class="card">
-        <p class="eyebrow">How it works</p>
-        <ol class="steps">
-          <li>Add a few friends.</li>
-          <li>
-            Every Monday the wheel picks one and writes your opening line.
-          </li>
-          <li>Send it, then tap "I reached out" to keep your streak.</li>
-          <li>Add this page to your home screen so your list sticks around.</li>
-        </ol>
-        <a href="#friends" class="button">
-          Add friends
-        </a>
-      </section>
-    );
-  }
-  if (done) {
-    return (
-      <section class="card">
-        <p>
-          You reached out to <strong>{friend.name}</strong> this week.{" "}
-          {streak > 1
-            ? `That's ${streak} weeks in a row.`
-            : "First week of a streak. Keep it going next Monday."}
-        </p>
-        <p class="eyebrow">Next spin in</p>
-        <p class="timer">
-          {countdown(nextMonday(new Date(now)).getTime() - now)}
-        </p>
-        <BirthdayNote birthdays={birthdays} onPick={onPick} />
+        <p class="eyebrow">{eyebrow}</p>
+        <h2>Who's it going to be?</h2>
+        <div class="actions">
+          <button type="button" onClick={onSpin}>
+            Spin the wheel
+          </button>
+        </div>
+        <p class="note">The wheel is rigged. It already knows.</p>
       </section>
     );
   }
@@ -88,29 +60,19 @@ export function PickCard({
     );
   }
 
-  const url = friend.handle ? link(friend.method, friend.handle, text) : null;
   const prefills = METHODS[friend.method].prefills;
   return (
     <section class="card" aria-live="polite">
-      <p class="eyebrow">This week{streak > 0 && ` · ${streak}-week streak`}</p>
+      <p class="eyebrow">{eyebrow}</p>
       <h2>{friend.name}</h2>
       <p class="line">“{text}”</p>
       <div class="actions">
-        {url ? (
-          <a
-            class="button"
-            href={url}
-            target={url.startsWith("http") ? "_blank" : undefined}
-            rel="noopener"
-            onClick={() => !prefills && copy()}
-          >
-            Open {METHODS[friend.method].label}
-          </a>
-        ) : (
-          <button type="button" onClick={share}>
-            Send it
-          </button>
-        )}
+        <SendButton
+          method={friend.method}
+          handle={friend.handle}
+          text={text}
+          onCopied={flash}
+        />
         <button type="button" class="secondary" onClick={onNewLine}>
           Different line
         </button>

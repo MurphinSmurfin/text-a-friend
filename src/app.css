@@ -140,15 +140,6 @@ h2 {
   justify-content: center;
   margin-right: -0.5rem;
 }
-.steps {
-  margin: 0.5rem 0 0;
-  padding-left: 1.25rem;
-  display: grid;
-  gap: 0.5rem;
-}
-.steps + .button {
-  margin-top: 1rem;
-}
 .streak {
   margin: 0;
   font-weight: 600;
@@ -165,7 +156,8 @@ h2 {
 }
 
 .wheel {
-  width: min(100%, 20rem);
+  /* capped by height too, so the card under it starts on the first screen of a short phone */
+  width: min(100%, 20rem, 45dvh);
   margin-inline: auto;
   display: block;
   color: var(--fg);
@@ -174,6 +166,15 @@ h2 {
   transform-box: fill-box;
   transform-origin: center;
   transition: transform 3s cubic-bezier(0.15, 0.85, 0.2, 1);
+}
+
+/* first visit: wheel, question and button share one screen, landscape phones included */
+.welcome .wheel {
+  width: min(
+    100%,
+    20rem,
+    max(30dvh, 9rem)
+  ); /* the floor keeps "You" readable on a landscape phone */
 }
 
 .card {
@@ -233,7 +234,8 @@ button:disabled {
   opacity: 0.5;
   cursor: default;
 }
-button.secondary {
+button.secondary,
+.button.secondary {
   background: var(--card);
   border-color: var(--line);
   color: var(--accent);

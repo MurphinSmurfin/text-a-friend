@@ -214,6 +214,20 @@ describe("loadState", () => {
   });
 });
 
+describe("spun", () => {
+  it("survives a reload, is dropped with the pick when malformed, and is false on a fresh pick", () => {
+    const pick = { friendId: "a", line: "hi", week: "2026-10-19" };
+    const load = (spun: unknown) =>
+      loadState(JSON.stringify({ friends: [f("a")], pick: { ...pick, spun } }));
+    expect(load(true).pick).toEqual({ ...pick, spun: true });
+    expect(load("yes").pick).toBeNull();
+    const fresh = ensurePick({ ...EMPTY, friends: [f("a")] }, monday, () => 0);
+    expect(fresh.pick?.spun).toBe(false);
+    // a pick saved before the field existed was already on screen
+    expect(load(undefined).pick).toEqual({ ...pick, spun: true });
+  });
+});
+
 describe("ago and heat", () => {
   it("labels the last contact", () => {
     expect(ago(null, "2026-10-19")).toBe("never");

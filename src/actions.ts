@@ -5,6 +5,8 @@ import {
   localDate,
   pickFor,
   weekStart,
+  type Friend,
+  type Pick,
   type State,
 } from "./lib/state.ts";
 
@@ -15,20 +17,34 @@ export function makeActions(setState: Update, onSpin: () => void) {
   const update: Update = (fn) => setState((s) => ensurePick(fn(s), new Date()));
   const today = () => localDate(new Date());
   const week = () => weekStart(new Date());
+  /** A pick the user asked for, so it is shown without another spin. */
+  const pick = (friend: Friend, avoid?: string): Pick => ({
+    friendId: friend.id,
+    line: lineFor(friend, new Date(), avoid),
+    week: week(),
+    spun: true,
+  });
   return {
-    add: (draft: Draft) =>
-      update((s) => ({
-        ...s,
-        friends: [
-          ...s.friends,
-          {
-            ...draft,
-            id: crypto.randomUUID(),
-            lastContact: null,
-            birthday: null,
-          },
-        ],
-      })),
+    /** `asPick` makes the new friend this week's pick: the spin link's screen promises a first line for the name just typed. */
+    add: (draft: Draft, asPick = false) =>
+      update((s) => {
+        const friend: Friend = {
+          ...draft,
+          id: crypto.randomUUID(),
+          lastContact: null,
+          birthday: null,
+        };
+        return {
+          ...s,
+          friends: [...s.friends, friend],
+          // a lone friend's pick was on screen without a spin, so a second friend must not hide it again
+          pick: asPick
+            ? pick(friend)
+            : s.pick && s.friends.length === 1
+              ? { ...s.pick, spun: true }
+              : s.pick,
+        };
+      }),
     // shortcut: no editing a friend's method, remove and re-add; upgrade when someone asks
     remove: (id: string) =>
       update((s) => ({ ...s, friends: s.friends.filter((f) => f.id !== id) })),
@@ -53,16 +69,15 @@ export function makeActions(setState: Update, onSpin: () => void) {
           s.friends.filter((f) => f.id !== s.pick?.friendId),
           new Date(),
         );
-        return friend
-          ? {
-              ...s,
-              pick: {
-                friendId: friend.id,
-                line: lineFor(friend, new Date(), s.pick?.line),
-                week: week(),
-              },
-            }
-          : s;
+        return friend ? { ...s, pick: pick(friend, s.pick?.line) } : s;
+      });
+    },
+    /** The weekly spin. It picks again so a tie breaks while the user is watching, not at page load. */
+    spin: () => {
+      onSpin();
+      update((s) => {
+        const friend = pickFor(s.friends, new Date());
+        return friend ? { ...s, pick: pick(friend) } : s;
       });
     },
     /** Make a given friend this week's pick, used for the other birthdays once the first is done. */
@@ -70,16 +85,7 @@ export function makeActions(setState: Update, onSpin: () => void) {
       onSpin();
       update((s) => {
         const friend = s.friends.find((f) => f.id === id);
-        return friend
-          ? {
-              ...s,
-              pick: {
-                friendId: id,
-                line: lineFor(friend, new Date()),
-                week: week(),
-              },
-            }
-          : s;
+        return friend ? { ...s, pick: pick(friend) } : s;
       });
     },
     newLine: () =>

@@ -134,9 +134,10 @@ export function SettingsPage({ state, onRestore }: Props) {
       <section class="card">
         <p class="eyebrow">Privacy</p>
         <p>
-          Everything stays in this browser and nothing is sent anywhere. Add
-          this page to your home screen so Safari keeps your list, and skip
-          private browsing, which wipes it when the window closes.
+          Your list stays in this browser. The only things that leave are the
+          messages you choose to send, and a spin link holds two numbers and no
+          names. Add this page to your home screen so Safari keeps your list,
+          and skip private browsing, which wipes it when the window closes.
         </p>
       </section>
     </main>

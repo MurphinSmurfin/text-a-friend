@@ -1,5 +1,4 @@
 import { useEffect, useState } from "preact/hooks";
-import type { Friend } from "../lib/state.ts";
 import {
   RIM,
   fontSize,
@@ -11,7 +10,7 @@ import {
 } from "../lib/wheel.ts";
 
 type Props = {
-  friends: Friend[];
+  friends: { id: string; name: string }[];
   pickId?: string;
   spinning: boolean;
   onLand: () => void;
@@ -40,7 +39,7 @@ export function Wheel({ friends, pickId, spinning, onLand }: Props) {
       class="wheel"
       viewBox="-1.05 -1.05 2.1 2.1"
       role="img"
-      aria-label="Roulette wheel of your friends"
+      aria-label="Roulette wheel"
     >
       <g
         class="rotor"
