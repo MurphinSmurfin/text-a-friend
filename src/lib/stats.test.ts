@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Friend, State } from "./state.ts";
-import { longestRun, yearStats } from "./stats.ts";
+import { cardRows, longestRun, yearStats } from "./stats.ts";
 
 const f = (id: string, lastContact: string | null): Friend => ({
   id,
@@ -54,5 +54,18 @@ describe("yearStats", () => {
   it("has no neglected friend when everyone is recent", () => {
     const fresh = { ...state, friends: [f("Bo", "2026-10-19")] };
     expect(yearStats(fresh, now).neglected).toBeNull();
+  });
+  it("still recaps last year until 15 January", () => {
+    expect(yearStats(state, new Date(2027, 0, 5)).year).toBe(2026);
+    expect(yearStats(state, new Date(2027, 0, 5)).texts).toBe(4);
+    expect(yearStats(state, new Date(2027, 0, 15)).year).toBe(2026);
+    expect(yearStats(state, new Date(2027, 0, 16)).year).toBe(2027);
+  });
+  it("names nobody on the card unless asked", () => {
+    const stats = yearStats(state, now);
+    const safe = cardRows(stats, false).flat().join(" ");
+    expect(safe).not.toContain("Ana");
+    expect(safe).toContain("Someone is still waiting for a text");
+    expect(cardRows(stats, true).map((r) => r[0])).toContain("Ana");
   });
 });

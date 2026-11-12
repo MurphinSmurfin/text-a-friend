@@ -27,9 +27,16 @@ export function longestRun(weeks: string[]): number {
   return best;
 }
 
+/** The card stays up until 15 January (flags.ts), so the first half of January still recaps last year. */
+const RECAP_DAYS = 15;
+
 /** The numbers for the shareable year card. Removed friends still count as texts, not as names. */
 export function yearStats(state: State, now: Date): YearStats {
-  const year = now.getFullYear();
+  const year = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() - RECAP_DAYS,
+  ).getFullYear();
   const inYear = (date: string) => date.startsWith(`${year}-`);
   const entries = state.log.filter((e) => inYear(e.date));
   const counts = new Map<string, number>();
@@ -52,4 +59,32 @@ export function yearStats(state: State, now: Date): YearStats {
     top,
     neglected: stale ? oldest.name : null,
   };
+}
+
+/** The big and small text of each row on the card. Without `names` no friend is named, so the default image is safe to post anywhere. */
+export function cardRows(stats: YearStats, names: boolean): [string, string][] {
+  const rows: [string, string][] = [
+    [String(stats.texts), stats.texts === 1 ? "text sent" : "texts sent"],
+    [
+      String(stats.friends),
+      stats.friends === 1 ? "friend reached" : "friends reached",
+    ],
+    [
+      String(stats.bestStreak),
+      stats.bestStreak === 1
+        ? "week, best streak"
+        : "weeks in a row, best streak",
+    ],
+  ];
+  if (names && stats.top)
+    rows.push([
+      stats.top.name,
+      `heard from you most, ${stats.top.count === 1 ? "once" : `${stats.top.count} times`}`,
+    ]);
+  if (stats.neglected)
+    rows.push([
+      names ? stats.neglected : "Someone",
+      "is still waiting for a text",
+    ]);
+  return rows;
 }
