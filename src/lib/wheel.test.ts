@@ -24,6 +24,9 @@ describe("landing", () => {
   it("snaps without spinning when turns is 0", () => {
     expect(landing(0, 4, 1755, 0)).toBe(1755);
   });
+  it("stays put on float drift instead of going round once more", () => {
+    expect(landing(1, 7, 2082.857142857143, 0)).toBe(2082.857142857143);
+  });
 });
 
 describe("hue", () => {

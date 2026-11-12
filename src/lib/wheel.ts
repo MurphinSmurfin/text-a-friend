@@ -15,7 +15,9 @@ export const sliceCenter = (i: number, n: number) => ((i + 0.5) / n) * 360;
 export function landing(i: number, n: number, from: number, turns = 4): number {
   const base = from + turns * 360;
   const target = -sliceCenter(i, n);
-  return base + ((((target - base) % 360) + 360) % 360);
+  const delta = (((target - base) % 360) + 360) % 360;
+  // float drift can leave delta a hair under 360, which would send a wheel that is already in place round once more
+  return base + (delta > 359.999 ? 0 : delta);
 }
 
 /** Hue for the friend at position i. Golden-angle steps keep neighbours distinct and the list matching the wheel. */
